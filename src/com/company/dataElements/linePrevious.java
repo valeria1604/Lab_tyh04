@@ -1,6 +1,6 @@
 package com.company.dataElements;
 
-// Java program to draw a lineEditor in Applet
+// Java program to draw a LineEditor in Applet
 
 import java.awt.*;
 import javax.swing.*;
@@ -11,7 +11,7 @@ class MyCanvas2 extends JComponent {
     public void paint(Graphics g)
     {
 
-        // draw and display the lineEditor
+        // draw and display the LineEditor
         g.drawLine(30, 20, 80, 90);
     }
 }

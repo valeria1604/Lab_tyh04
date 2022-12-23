@@ -3,12 +3,12 @@ package com.company.dataElements;
 import java.util.*;
 //undirected graph represented using adjacency list.
 class Graph2 {
-    private int Nodes;   // No. of vertices
+    private int nodes;   // No. of vertices
     private LinkedList<Integer> adj_list[]; //Adjacency Lists
 
     // graph Constructor:number of vertices in graph are passed
     Graph2(int v) {
-        Nodes = v;
+        nodes = v;
         adj_list = new LinkedList[v];
         for (int i=0; i<v; ++i)         //create adjacency lists
             adj_list[i] = new LinkedList();
@@ -26,7 +26,7 @@ class Graph2 {
     // BFS traversal from the root_node
     void BFS(int root_node)   {
         // initially all vertices are not visited
-        boolean visited[] = new boolean[Nodes];
+        boolean visited[] = new boolean[nodes];
 
         // BFS queue
         LinkedList<Integer> queue = new LinkedList<Integer>();

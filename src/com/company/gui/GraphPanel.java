@@ -124,7 +124,6 @@ public class GraphPanel extends JPanel
 		graph.draw(g);
 		
 	}
-	
 		
 	
 	/*
@@ -273,6 +272,9 @@ public class GraphPanel extends JPanel
         // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda  
 		menuItem.addActionListener((action) -> {
 			graph.addNode(new Node(event.getX(), event.getY()));
+			//TODO remove hardcode
+			Node firstNode= graph.getNodesList().get(0);
+			graph.getNodesList().get(1).getLinkedNodes().add(firstNode);
 			repaint();
 		});
 		/*

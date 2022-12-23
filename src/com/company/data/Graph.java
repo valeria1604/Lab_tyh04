@@ -16,8 +16,6 @@
 
 package com.company.data;
 
-import com.company.dataElements.line;
-
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,21 +28,16 @@ public class Graph implements Serializable {
 
 	// Lista w�z��w grafu
 	private List<Node> nodes;
-	private List<line> lines;
 
 	
 	public Graph() {
 		this.nodes = new ArrayList<Node>();
-		this.lines = new ArrayList<line>();
 	}
 	
 	public void addNode(Node node){
 		nodes.add(node);
 	}
 
-	public void addLine(line line){
-		lines.add(line);
-	}
 
 	public void removeNode(Node node){
 		nodes.remove(node);
@@ -66,12 +59,6 @@ public class Graph implements Serializable {
 	public void draw(Graphics g){
 		for(Node node : nodes){
 			node.draw(g);
-		}
-	}
-
-	public void drawLine(Graphics g){
-		for(com.company.dataElements.line line: lines){
-			line.draw(g);
 		}
 	}
 

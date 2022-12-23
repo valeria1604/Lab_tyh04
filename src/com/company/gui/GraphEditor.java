@@ -154,15 +154,6 @@ public class GraphEditor extends JFrame implements ActionListener {
         }
 
         if (source == menuLoadFromDocument) {
-
-//            Node newNode = null;
-//            try {
-//                newNode = loadGroupListFromFile(LIST_OF_NODES);
-//            } catch (NodeException e) {
-//                e.printStackTrace();
-//            }
-//            Graph graph = new Graph();
-//            graph.addNode(newNode);
             try {
                 panel.getGraph().setNodes(loadGroupListFromFile(LIST_OF_NODES));
             } catch (NodeException e) {
@@ -223,24 +214,6 @@ public class GraphEditor extends JFrame implements ActionListener {
         }
         return listOfNodes;
     }
-
-
-//        FileInputStream file = null;
-//        Node node = null;
-//        try {
-//            file = new FileInputStream(fileName);
-//            ObjectInputStream reader = null;
-//            reader = new ObjectInputStream(file);
-//            node = (Node) reader.readObject();
-//            reader.close();
-//        } catch (FileNotFoundException e) {
-//            throw new NodeException("File wasn't found: " + fileName);
-//        } catch (IOException e) {
-//            throw new NodeException("Error");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return node;
     }
 
 

@@ -1,18 +1,16 @@
 package com.company.dataElements;
 
-// Java program to draw a lineEditor in Applet
+// Java program to draw a LineEditor in Applet
 
-import com.company.data.Graph;
-import com.company.gui.GraphPanel;
+import com.company.data.GraphForLines;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class MyCanvas extends JComponent implements MouseListener, MouseMotionListener, KeyListener{
+class MyCanvas extends JPanel implements MouseListener, MouseMotionListener, KeyListener{
 
-    protected Graph graph;
-
+    protected GraphForLines graph;
 
     private int mouseX = 0;
     private int mouseY = 0;
@@ -21,11 +19,11 @@ class MyCanvas extends JComponent implements MouseListener, MouseMotionListener,
     private boolean mouseButtonRigth = false;
     protected int mouseCursor = Cursor.DEFAULT_CURSOR;
 
-    public Graph getGraph() {
+    public GraphForLines getGraph() {
         return graph;
     }
 
-    public void setGraph(Graph graph) {
+    public void setGraph (GraphForLines graph) {
         this.graph = graph;
     }
 
@@ -47,13 +45,14 @@ class MyCanvas extends JComponent implements MouseListener, MouseMotionListener,
     protected void createPopupMenu(MouseEvent event) {
         JMenuItem menuItem;
         JPopupMenu popup = new JPopupMenu();
-        menuItem = new JMenuItem("Create new line");
+        menuItem = new JMenuItem("Create new Line");
+        GraphForLines graph = new GraphForLines();
         menuItem.addActionListener((action) -> {
-            graph.addLine(new line(event.getX(), event.getY()));
+            graph.addLine(new Line(event.getX(), event.getY()));
+            repaint();
         });
         popup.add(menuItem);
         popup.show(event.getComponent(), event.getX(), event.getY());
-
     }
 
     protected void paintComponent(Graphics g) {
@@ -120,7 +119,7 @@ class MyCanvas extends JComponent implements MouseListener, MouseMotionListener,
     }
 }
 
-public class lineEditor {
+public class LineEditor {
 
     public static void main(String[] a) {
 

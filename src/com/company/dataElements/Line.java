@@ -3,19 +3,19 @@ package com.company.dataElements;
 import java.awt.*;
 import java.io.Serializable;
 
-public class line implements Serializable {
+public class Line implements Serializable {
     protected int x;
     protected int y;
-    protected int x2;
-    protected int y2;
+//    protected int x2;
+//    protected int y2;
 
     private Color color;
 
-    public line(int x, int y) {
+    public Line(int x, int y) {
         this.x = x;
         this.y = y;
-        this.x2 = 10;
-        this.y2 = 10;
+//        this.x2 = 10;
+//        this.y2 = 10;
         this.color = Color.BLUE;
     }
 
@@ -34,21 +34,21 @@ public class line implements Serializable {
         this.y = y;
     }
 
-    public int getX2() {
-        return x2;
-    }
-
-    public void setX2(int x2) {
-        this.x2 = x2;
-    }
-
-    public int getY2() {
-        return y2;
-    }
-
-    public void setY2(int y2) {
-        this.y2 = y2;
-    }
+//    public int getX2() {
+//        return x2;
+//    }
+//
+//    public void setX2(int x2) {
+//        this.x2 = x2;
+//    }
+//
+//    public int getY2() {
+//        return y2;
+//    }
+//
+//    public void setY2(int y2) {
+//        this.y2 = y2;
+//    }
 
     public Color getColor() {
         return color;
@@ -64,7 +64,7 @@ public class line implements Serializable {
 
     public void draw(Graphics g) {
         g.setColor(Color.BLUE);
-        g.drawLine(x, y, x2, y2);
+        g.drawLine(x, y, 10, 10);
     }
 
     @Override
