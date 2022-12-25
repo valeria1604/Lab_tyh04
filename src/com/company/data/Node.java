@@ -23,19 +23,14 @@ import java.util.LinkedList;
 
 public class Node implements Serializable {
 
-    // po�o�enie ko�a
     protected int x;
     protected int y;
 
-    // promie� ko�a
     protected int r;
 
-    // kolor wype�nienia
     private Color color;
 
-    //TODO захардкодить связь между первой и второй нодами
     private LinkedList<Node> linkedNodes = new LinkedList<>();
-
 
     public Node(int x, int y) {
         this.x = x;
@@ -81,8 +76,6 @@ public class Node implements Serializable {
     }
 
     void draw(Graphics g) {
-        // Rysowanie wype�nionego ko�a o �rodku w punkcie  (x,y)
-        // i promieniu r
         g.setColor(color);
         g.fillOval(x - r, y - r, 2 * r, 2 * r);
         g.setColor(Color.BLACK);
@@ -90,9 +83,9 @@ public class Node implements Serializable {
         if (linkedNodes != null) {
             for (Node node : linkedNodes) {
                 g.drawLine(x, y, node.getX(), node.getY());
+
             }
         }
-
     }
 
     public LinkedList<Node> getLinkedNodes() {

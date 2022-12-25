@@ -11,7 +11,7 @@
 
 package com.company.gui;
 
-import com.company.data.Graph;
+import com.company.data.GraphForNodes;
 import com.company.data.Node;
 import com.company.data.NodeException;
 
@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -55,15 +56,16 @@ public class GraphEditor extends JFrame implements ActionListener {
         new GraphEditor();
     }
 
+
     private static final String LIST_OF_NODES = "Nodes.BIN";
 
-    // private GraphBase graph;
+    // private GraphBase graphForNodes;
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu("File");
     private JMenuItem menuLoadFromDocument = new JMenuItem("Load from document", KeyEvent.VK_L);
     private JMenuItem menuSaveToDocument = new JMenuItem("Save to document", KeyEvent.VK_S);
 
-    private JMenu menuGraph = new JMenu("Graph");
+    private JMenu menuGraph = new JMenu("GraphForNodes");
     private JMenu menuHelp = new JMenu("Help");
     private JMenuItem menuNew = new JMenuItem("New", KeyEvent.VK_N);
     private JMenuItem menuShowExample = new JMenuItem("Example", KeyEvent.VK_X);
@@ -86,8 +88,8 @@ public class GraphEditor extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    private void showListOfNodes(Graph graph) {
-        Node array[] = graph.getNodes();
+    private void showListOfNodes(GraphForNodes graphForNodes) {
+        Node array[] = graphForNodes.getNodes();
         int i = 0;
         StringBuilder message = new StringBuilder("Liczba wêz³ów: " + array.length + "\n");
         for (Node node : array) {
@@ -135,7 +137,7 @@ public class GraphEditor extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
         if (source == menuNew) {
-            panel.setGraph(new Graph());
+            panel.setGraph(new GraphForNodes());
         }
         if (source == menuShowExample) {
             showBuildinExample();
@@ -172,7 +174,7 @@ public class GraphEditor extends JFrame implements ActionListener {
     }
 
     private void showBuildinExample() {
-        Graph graph = new Graph();
+        GraphForNodes graphForNodes = new GraphForNodes();
 
         Node n1 = new Node(100, 100);
         Node n2 = new Node(100, 200);
@@ -183,11 +185,11 @@ public class GraphEditor extends JFrame implements ActionListener {
         n4.setColor(Color.GREEN);
         n4.setR(30);
 
-        graph.addNode(n1);
-        graph.addNode(n2);
-        graph.addNode(n3);
-        graph.addNode(n4);
-        panel.setGraph(graph);
+        graphForNodes.addNode(n1);
+        graphForNodes.addNode(n2);
+        graphForNodes.addNode(n3);
+        graphForNodes.addNode(n4);
+        panel.setGraph(graphForNodes);
     }
 
     void saveGroupListToFile(String fileName) throws NodeException {
