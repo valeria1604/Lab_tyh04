@@ -16,6 +16,8 @@
 
 package com.company.data;
 
+import com.company.dataElements.Edge;
+
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,17 +30,28 @@ public class GraphForNodes implements Serializable {
 
     private List<Node> nodes;
 
+    private List<Edge> edges;
+
     public GraphForNodes() {
         this.nodes = new ArrayList<Node>();
+        this.edges = new ArrayList<Edge>();
     }
 
     public void addNode(Node node) {
         nodes.add(node);
     }
 
+    public void addEdge(Edge edge) {
+        edges.add(edge);
+    }
+
 
     public void removeNode(Node node) {
         nodes.remove(node);
+    }
+
+    public void removeEdge(Edge edge) {
+        edges.remove(edge);
     }
 
     public Node[] getNodes() {
@@ -50,6 +63,11 @@ public class GraphForNodes implements Serializable {
         return nodes;
     }
 
+    public List<Edge> getEdgesList() {
+        return edges;
+    }
+
+
     public void setNodes(List<Node> nodes) {
         this.nodes = nodes;
     }
@@ -57,6 +75,9 @@ public class GraphForNodes implements Serializable {
     public void draw(Graphics g) {
         for (Node node : nodes) {
             node.draw(g);
+        }
+        for (Edge edge : edges) {
+            edge.draw(g);
         }
     }
 

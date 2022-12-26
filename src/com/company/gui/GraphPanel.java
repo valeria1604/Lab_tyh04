@@ -18,11 +18,11 @@ package com.company.gui;
 
 import com.company.data.GraphForNodes;
 import com.company.data.Node;
+import com.company.dataElements.Edge;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 
 public class GraphPanel extends JPanel
@@ -41,9 +41,9 @@ public class GraphPanel extends JPanel
     protected int mouseCursor = Cursor.DEFAULT_CURSOR;
 
     protected Node nodeUnderCursor = null;
+    protected Edge edgeUnderCursor = null;
 
-    private ArrayList<Node> toConnect = new ArrayList<>();
-    private ArrayList<Node> toDelete = new ArrayList<>();
+    private Node firstChosenNode;
 
 
     public GraphPanel() {
@@ -76,9 +76,23 @@ public class GraphPanel extends JPanel
         return findNode(event.getX(), event.getY());
     }
 
+    private Edge findEdge(int mx, int my) {
+        for (Edge edge : graphForNodes.getEdgesList()) {
+            if (edge.isMouseOver(mx, my)) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
+    private Edge findEdge(MouseEvent event) {
+        return findEdge(event.getX(), event.getY());
+    }
+
     protected void setMouseCursor(MouseEvent event) {
         nodeUnderCursor = findNode(event);
-        if (nodeUnderCursor != null) {
+        edgeUnderCursor = findEdge(event);
+        if (nodeUnderCursor != null || edgeUnderCursor != null) {
             mouseCursor = Cursor.HAND_CURSOR;
         } else if (mouseButtonLeft) {
             mouseCursor = Cursor.MOVE_CURSOR;
@@ -92,7 +106,9 @@ public class GraphPanel extends JPanel
 
     protected void setMouseCursor() {
         nodeUnderCursor = findNode(mouseX, mouseY);
-        if (nodeUnderCursor != null) {
+        edgeUnderCursor = findEdge(mouseX, mouseY);
+
+        if (nodeUnderCursor != null || edgeUnderCursor != null) {
             mouseCursor = Cursor.HAND_CURSOR;
         } else if (mouseButtonLeft) {
             mouseCursor = Cursor.MOVE_CURSOR;
@@ -163,6 +179,8 @@ public class GraphPanel extends JPanel
         if (event.getButton() == 3) {
             if (nodeUnderCursor != null) {
                 createPopupMenu(event, nodeUnderCursor);
+            } else if (edgeUnderCursor != null) {
+                createPopupMenuForEdge(event, edgeUnderCursor);
             } else {
                 createPopupMenu(event);
             }
@@ -312,41 +330,34 @@ public class GraphPanel extends JPanel
 
 
         menuCreateLine.addActionListener((a) -> {
-            toConnect.add(nodeUnderCursor);
+            firstChosenNode = node;
         });
 
 
         menuCreateLineWith.addActionListener((a) -> {
-            toConnect.add(nodeUnderCursor);
-            if (toConnect.size()>1) {
-				int size = toConnect.size();
-                node.getLinkedNodes().add(toConnect.get(size - 2));
-				repaint();
-				toConnect.clear();
-            }
-			else{
-				JOptionPane.showMessageDialog(null, "You need to choose the first node before you connect");
-			}
-        });
-
-        menuDeleteLine.addActionListener((a) -> {
-            toDelete.add(nodeUnderCursor);
-        });
-
-        menuDeleteLineWith.addActionListener((a) -> {
-            toDelete.add(nodeUnderCursor);
-            if (toDelete.size()>1) {
-                int size = toDelete.size();
-                node.getLinkedNodes().remove(toDelete.get(size - 2));
-                node.getLinkedNodes().remove(toDelete.get(size - 1));
+            //2 exceptions
+            if (firstChosenNode != null && firstChosenNode != node) {
+                node.getLinkedNodes().add(firstChosenNode);
+                graphForNodes.addEdge(new Edge(firstChosenNode, node, Color.BLUE));
                 repaint();
-                toDelete.clear();
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(null, "You need to choose the first node before you connect");
             }
         });
 
+        menuDeleteLine.addActionListener((a) -> {
+            firstChosenNode = node;
+        });
+
+        menuDeleteLineWith.addActionListener((a) -> {
+            if (firstChosenNode != null && firstChosenNode != node) {
+                node.getLinkedNodes().remove(firstChosenNode);
+                //graphForNodes.removeEdge(new Edge(firstChosenNode, node, Color.BLUE));
+                repaint();
+            } else {
+                JOptionPane.showMessageDialog(null, "You need to choose the first node before you connect");
+            }
+        });
 
 
         // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda
@@ -360,7 +371,7 @@ public class GraphPanel extends JPanel
             }
             repaint();
         });
-		
+
 
         popup.add(menuItem);
         popup.add(menuCreateLine);
@@ -389,4 +400,29 @@ public class GraphPanel extends JPanel
         popup.show(event.getComponent(), event.getX(), event.getY());
     }
 
+    protected void createPopupMenuForEdge(MouseEvent event, Edge edge) {
+        JMenuItem menuChangeColor;
+
+        // Create the popup menu.
+        JPopupMenu popup = new JPopupMenu();
+        menuChangeColor = new JMenuItem("Change edge color");
+
+        // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda
+        menuChangeColor.addActionListener((a) -> {
+            Color newColor = JColorChooser.showDialog(
+                    this,
+                    "Choose Background Color",
+                    edge.getColor());
+            if (newColor != null) {
+                edge.setColor(newColor);
+            }
+            repaint();
+        });
+
+
+        popup.add(menuChangeColor);
+        popup.show(event.getComponent(), event.getX(), event.getY());
+    }
+
 }
+

@@ -80,12 +80,6 @@ public class Node implements Serializable {
         g.fillOval(x - r, y - r, 2 * r, 2 * r);
         g.setColor(Color.BLACK);
         g.drawOval(x - r, y - r, 2 * r, 2 * r);
-        if (linkedNodes != null) {
-            for (Node node : linkedNodes) {
-                g.drawLine(x, y, node.getX(), node.getY());
-
-            }
-        }
     }
 
     public LinkedList<Node> getLinkedNodes() {
