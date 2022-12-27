@@ -1,50 +1,39 @@
-/*
- *  Program: Prosty edytor grafu
- *     Plik: GraphPanel.java
- *
- *  Klasa GraphPanel implementuje podstawowe funkcjonalno�ci
- *  graficznego edytora grafu nieskierowanego.
- *  Klasa umo�liwia:
- *     - rysowanie grafu w oknie,
- *     - obs�ug� zdarze� generowanych przez myszk�,
- *     - tworzenie i obs�ug� menu kontekstowych
- *       umo�liwiaj�cych wykonywanie operacji edycyjnych.
- *
- *    Autor: Pawel Rogalinski
- *     Data:  listopad 2021 r.
+/**
+ * Nazwa: Graph editor
+ * Autor: Valeriia Tykhoniuk (266319)
+ * Data utworzenia: 13.12.2022
  */
 
 package com.company.gui;
 
-import com.company.data.GraphForNodes;
+import com.company.data.Edge;
+import com.company.data.Graph;
 import com.company.data.Node;
-import com.company.dataElements.Edge;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serial;
 
 
 public class GraphPanel extends JPanel
         implements MouseListener, MouseMotionListener, KeyListener {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    protected GraphForNodes graphForNodes;
-
+    protected Graph graph;
 
     private int mouseX = 0;
     private int mouseY = 0;
     private boolean mouseButtonLeft = false;
-    @SuppressWarnings("unused")
-    private boolean mouseButtonRigth = false;
+    private boolean mouseButtonRight = false;
     protected int mouseCursor = Cursor.DEFAULT_CURSOR;
 
     protected Node nodeUnderCursor = null;
     protected Edge edgeUnderCursor = null;
 
     private Node firstChosenNode;
-
 
     public GraphPanel() {
         this.addMouseListener(this);
@@ -54,17 +43,16 @@ public class GraphPanel extends JPanel
         requestFocus();
     }
 
-    public GraphForNodes getGraph() {
-        return graphForNodes;
+    public Graph getGraph() {
+        return graph;
     }
 
-    public void setGraph(GraphForNodes graphForNodes) {
-        this.graphForNodes = graphForNodes;
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
-
 
     private Node findNode(int mx, int my) {
-        for (Node node : graphForNodes.getNodes()) {
+        for (Node node : graph.getNodes()) {
             if (node.isMouseOver(mx, my)) {
                 return node;
             }
@@ -77,7 +65,7 @@ public class GraphPanel extends JPanel
     }
 
     private Edge findEdge(int mx, int my) {
-        for (Edge edge : graphForNodes.getEdgesList()) {
+        for (Edge edge : graph.getEdgesList()) {
             if (edge.isMouseOver(mx, my)) {
                 return edge;
             }
@@ -124,32 +112,22 @@ public class GraphPanel extends JPanel
         node.setY(node.getY() + dy);
     }
 
-    // Przenie�� do klasy GraphForNodes
     private void moveAllNodes(int dx, int dy) {
-        for (Node node : graphForNodes.getNodes()) {
+        for (Node node : graph.getNodes()) {
             moveNode(dx, dy, node);
         }
     }
 
-    /*
-     * UWAGA: ta metoda b�dzie wywo�ywana automatycznie przy ka�dej potrzebie
-     * odrysowania na ekranie zawarto�ci panelu
-     *
-     * W tej metodzie NIE WOLNO !!! wywo�ywa� metody repaint()
-     */
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (graphForNodes == null) return;
-        graphForNodes.draw(g);
+        if (graph == null) return;
+        graph.draw(g);
 
     }
 
 
-    /*
-     * Implementacja interfejsu MouseListener - obs�uga zdarze� generowanych przez myszk�
-     * gdy kursor myszki jest na tym panelu
-     */
     @Override
     public void mouseClicked(MouseEvent event) {
     }
@@ -165,7 +143,7 @@ public class GraphPanel extends JPanel
     @Override
     public void mousePressed(MouseEvent event) {
         if (event.getButton() == 1) mouseButtonLeft = true;
-        if (event.getButton() == 3) mouseButtonRigth = true;
+        if (event.getButton() == 3) mouseButtonRight = true;
         setMouseCursor(event);
     }
 
@@ -174,7 +152,7 @@ public class GraphPanel extends JPanel
         if (event.getButton() == 1)
             mouseButtonLeft = false;
         if (event.getButton() == 3)
-            mouseButtonRigth = false;
+            mouseButtonRight = false;
         setMouseCursor(event);
         if (event.getButton() == 3) {
             if (nodeUnderCursor != null) {
@@ -188,11 +166,6 @@ public class GraphPanel extends JPanel
     }
 
 
-    /*
-     * Implementacja interfejsu MouseMotionListener
-     *  - obs�uga zdarze� generowanych przez ruch myszki
-     * gdy kursor myszki jest na tym panelu
-     */
     @Override
     public void mouseDragged(MouseEvent event) {
         if (mouseButtonLeft) {
@@ -213,10 +186,6 @@ public class GraphPanel extends JPanel
     }
 
 
-    /*
-     *  Impelentacja interfejsu KeyListener - obs�uga zdarze� generowanych
-     *  przez klawiatur� gdy focus jest ustawiony na ten obiekt.
-     */
     @Override
     public void keyPressed(KeyEvent event) {
         {
@@ -238,7 +207,7 @@ public class GraphPanel extends JPanel
                     break;
                 case KeyEvent.VK_DELETE:
                     if (nodeUnderCursor != null) {
-                        graphForNodes.removeNode(nodeUnderCursor);
+                        graph.removeNode(nodeUnderCursor);
                         nodeUnderCursor = null;
                     }
                     break;
@@ -254,9 +223,9 @@ public class GraphPanel extends JPanel
 
     @Override
     public void keyTyped(KeyEvent event) {
-        char znak = event.getKeyChar();
+        char key = event.getKeyChar();
         if (nodeUnderCursor != null) {
-            switch (znak) {
+            switch (key) {
                 case 'r':
                     nodeUnderCursor.setColor(Color.RED);
                     break;
@@ -281,33 +250,18 @@ public class GraphPanel extends JPanel
     }
 
 
-    /*
-     *  Tworzenie i obs�uga menu kontekstowego uruchanianego
-     *  poprzez klikni�cie prawym przyciskiem myszki
-     */
     protected void createPopupMenu(MouseEvent event) {
         JMenuItem menuItem;
 
-        //Create the popup menu.
         JPopupMenu popup = new JPopupMenu();
         menuItem = new JMenuItem("Create new node");
 
-        // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda  
         menuItem.addActionListener((action) -> {
-            graphForNodes.addNode(new Node(event.getX(), event.getY()));
+            graph.addNode(new Node(event.getX(), event.getY()));
 
             repaint();
         });
-		/*
-		// Implementacja s�uchacza zdarze� za pomoc� klasy anonimowej 
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent action) {
-				graphForNodes.addNode(new Node(event.getX(), event.getY()));
-				repaint();
-			}
-		});
-		*/
+
         popup.add(menuItem);
         popup.show(event.getComponent(), event.getX(), event.getY());
     }
@@ -317,17 +271,11 @@ public class GraphPanel extends JPanel
         JMenuItem menuItem;
         JMenuItem menuCreateLine;
         JMenuItem menuCreateLineWith;
-        JMenuItem menuDeleteLine;
-        JMenuItem menuDeleteLineWith;
 
-        // Create the popup menu.
         JPopupMenu popup = new JPopupMenu();
         menuItem = new JMenuItem("Change node color");
         menuCreateLine = new JMenuItem("Create edge (first node)");
         menuCreateLineWith = new JMenuItem("Create edge with (second node)");
-        menuDeleteLine = new JMenuItem("Delete edge (first node)");
-        menuDeleteLineWith = new JMenuItem("Delete edge with (second node)");
-
 
         menuCreateLine.addActionListener((a) -> {
             firstChosenNode = node;
@@ -335,32 +283,20 @@ public class GraphPanel extends JPanel
 
 
         menuCreateLineWith.addActionListener((a) -> {
-            //2 exceptions
-            if (firstChosenNode != null && firstChosenNode != node) {
-                node.getLinkedNodes().add(firstChosenNode);
-                graphForNodes.addEdge(new Edge(firstChosenNode, node, Color.BLUE));
-                repaint();
+            if (firstChosenNode != node) {
+                if (firstChosenNode != null) {
+                    node.getLinkedNodes().add(firstChosenNode);
+                    graph.addEdge(new Edge(firstChosenNode, node, Color.BLUE));
+                    repaint();
+                } else {
+                    JOptionPane.showMessageDialog(null, "You need to choose the first node before you connect");
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "You need to choose the first node before you connect");
-            }
-        });
-
-        menuDeleteLine.addActionListener((a) -> {
-            firstChosenNode = node;
-        });
-
-        menuDeleteLineWith.addActionListener((a) -> {
-            if (firstChosenNode != null && firstChosenNode != node) {
-                node.getLinkedNodes().remove(firstChosenNode);
-                //graphForNodes.removeEdge(new Edge(firstChosenNode, node, Color.BLUE));
-                repaint();
-            } else {
-                JOptionPane.showMessageDialog(null, "You need to choose the first node before you connect");
+                JOptionPane.showMessageDialog(null, "You can't connect the same node");
             }
         });
 
 
-        // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda
         menuItem.addActionListener((a) -> {
             Color newColor = JColorChooser.showDialog(
                     this,
@@ -372,42 +308,27 @@ public class GraphPanel extends JPanel
             repaint();
         });
 
-
         popup.add(menuItem);
         popup.add(menuCreateLine);
         popup.add(menuCreateLineWith);
-        popup.add(menuDeleteLine);
-        popup.add(menuDeleteLineWith);
         menuItem = new JMenuItem("Remove this node");
 
-        // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda
         menuItem.addActionListener((action) -> {
-            graphForNodes.removeNode(node);
+            graph.removeNode(node);
             repaint();
         });
-		
-		/*
-		// Implementacja s�uchacza zdarze� za pomoc� klasy anonimowej
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent action) {
-				graphForNodes.removeNode(node);
-				repaint();
-			}
-		};
-		*/
         popup.add(menuItem);
         popup.show(event.getComponent(), event.getX(), event.getY());
     }
 
     protected void createPopupMenuForEdge(MouseEvent event, Edge edge) {
         JMenuItem menuChangeColor;
+        JMenuItem menuDelete;
 
-        // Create the popup menu.
         JPopupMenu popup = new JPopupMenu();
         menuChangeColor = new JMenuItem("Change edge color");
+        menuDelete = new JMenuItem("Delete edge");
 
-        // Implementacja s�uchacza zdarze� za pomoc� wyra�enia Lambda
         menuChangeColor.addActionListener((a) -> {
             Color newColor = JColorChooser.showDialog(
                     this,
@@ -419,8 +340,13 @@ public class GraphPanel extends JPanel
             repaint();
         });
 
+        menuDelete.addActionListener((a) -> {
+            graph.removeEdge(edge);
+            repaint();
+        });
 
         popup.add(menuChangeColor);
+        popup.add(menuDelete);
         popup.show(event.getComponent(), event.getX(), event.getY());
     }
 

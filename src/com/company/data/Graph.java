@@ -1,38 +1,28 @@
-/*
- *  Program: Prosty edytor grafu
- *     Plik: GraphForNodes.java
- *
- *  Klasa GraphForNodes reprezentuje graf na p�aszczy�nie.
- *  Klasa mo�e by� klas� bazow� dla klas reprezentuj�cych
- *  grafy modeluj�ce wybrane zagadnienia np.:
- *     - schemat komunikacji miejskiej,
- *     - drzewo genealogiczne,
- *     - schemat obwodu elektronicznego typu RLC,
- *     - schemat topologi sieci komputerowej
- *
- *    Autor: Pawel Rogalinski
- *     Data:  listopad 2021 r.
+/**
+ * Nazwa: Graph editor
+ * Autor: Valeriia Tykhoniuk (266319)
+ * Data utworzenia: 13.12.2022
  */
 
 package com.company.data;
 
-import com.company.dataElements.Edge;
-
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class GraphForNodes implements Serializable {
+public class Graph implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private List<Node> nodes;
 
     private List<Edge> edges;
 
-    public GraphForNodes() {
+    public Graph() {
         this.nodes = new ArrayList<Node>();
         this.edges = new ArrayList<Edge>();
     }
@@ -44,7 +34,6 @@ public class GraphForNodes implements Serializable {
     public void addEdge(Edge edge) {
         edges.add(edge);
     }
-
 
     public void removeNode(Node node) {
         nodes.remove(node);

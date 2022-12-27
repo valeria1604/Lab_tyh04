@@ -1,17 +1,7 @@
-/*
- *  Program: Prosty edytor grafu
- *     Plik: Node.java
- *
- *  Klasa Node reprezentuje w�z�y grafu na p�aszczy�nie.
- *  Klasa mo�e by� klas� bazow� dla klas reprezentuj�cych
- *  w�z�y graf�w modeluj�ch  wybrane zagadnienia np.:
- *     - schemat komunikacji miejskiej,
- *     - drzewo genealogiczne,
- *     - schemat obwodu elektronicznego typu RLC,
- *     - schemat topologi sieci komputerowej
- *
- *    Autor: Pawel Rogalinski
- *     Data:  listopad 2021 r.
+/**
+ * Nazwa: Graph editor
+ * Autor: Valeriia Tykhoniuk (266319)
+ * Data utworzenia: 13.12.2022
  */
 
 package com.company.data;
@@ -25,7 +15,6 @@ public class Node implements Serializable {
 
     protected int x;
     protected int y;
-
     protected int r;
 
     private Color color;

@@ -1,17 +1,12 @@
-/*
- *  Program: Prosty edytor grafu
- *     Plik: GraphEditor.java
- *
- *  Klasa GraphEditor implementuje okno g³ówne
- *  dla prostego graficznego edytora grafu.
- *
- *    Autor: Pawel Rogalinski
- *     Data:  listopad 2021 r.
+/**
+ * Nazwa: Graph editor
+ * Autor: Valeriia Tykhoniuk (266319)
+ * Data utworzenia: 13.12.2022
  */
 
 package com.company.gui;
 
-import com.company.data.GraphForNodes;
+import com.company.data.Graph;
 import com.company.data.Node;
 import com.company.data.NodeException;
 
@@ -21,9 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class GraphEditor extends JFrame implements ActionListener {
@@ -31,48 +23,45 @@ public class GraphEditor extends JFrame implements ActionListener {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static final String APP_AUTHOR = "Autor: Pawe³ Rogaliñski\n  Data: listopad 2021";
-    private static final String APP_TITLE = "Prosty edytor grafów";
+    private static final String APP_AUTHOR = "Author: Valeriia Tykhoniuk\n  Data: grudzien 2021";
+    private static final String APP_TITLE = "Graph editor";
 
     private static final String APP_INSTRUCTION =
-            "                  O P I S   P R O G R A M U \n\n" +
-                    "Aktywna klawisze:\n" +
-                    "   strza³ki ==> przesuwanie wszystkich kó³\n" +
-                    "   SHIFT + strza³ki ==> szybkie przesuwanie wszystkich kó³\n\n" +
-                    "ponadto gdy kursor wskazuje ko³o:\n" +
-                    "   DEL   ==> kasowanie ko³a\n" +
-                    "   +, -   ==> powiêkszanie, pomniejszanie ko³a\n" +
-                    "   r,g,b ==> zmiana koloru ko³a\n\n" +
-                    "Operacje myszka:\n" +
-                    "   przeci¹ganie ==> przesuwanie wszystkich kó³\n" +
-                    "   PPM ==> tworzenie nowego ko³a w niejscu kursora\n" +
-                    "ponadto gdy kursor wskazuje ko³o:\n" +
-                    "   przeci¹ganie ==> przesuwanie ko³a\n" +
-                    "   PPM ==> zmiana koloru ko³a\n" +
-                    "                   lub usuwanie ko³a\n";
+            "                 D E S C R I P T I O N \n\n" +
+                    "   arrows -> moving all nodes\n" +
+                    "   SHIFT + arrows -> fast moving all nodes\n\n" +
+
+                    "   DEL -> delete node\n" +
+                    "   +, -   -> change the size of node\n" +
+                    "   r,g,b -> color change of node\n\n" +
+
+                    "   Left mouse on node -> move of node \n" +
+                    "   Left mouse on node -> moving all nodes \n" +
+                    "   Right mouse on panel -> POPUP MENU (create node)\n" +
+                    "   Right mouse on node -> POPUP MENU (edit node)\n";
 
 
     public static void main(String[] args) {
         new GraphEditor();
     }
 
+    private static final String LIST_OF_GRAPH = "Graph.BIN";
 
-    private static final String LIST_OF_NODES = "Nodes.BIN";
-
-    // private GraphBase graphForNodes;
     private JMenuBar menuBar = new JMenuBar();
+
+    private JMenu menuGraph = new JMenu("Graph");
+    private JMenuItem menuNew = new JMenuItem("New", KeyEvent.VK_N);
+    private JMenuItem menuShowExample = new JMenuItem("Example", KeyEvent.VK_X);
+    private JMenuItem menuListOfNodes = new JMenuItem("List of Nodes", KeyEvent.VK_N);
+    private JMenuItem menuExit = new JMenuItem("Exit", KeyEvent.VK_E);
+
+    private JMenu menuHelp = new JMenu("Help");
+    private JMenuItem menuAuthor = new JMenuItem("Author", KeyEvent.VK_A);
+    private JMenuItem menuInstruction = new JMenuItem("Instruction", KeyEvent.VK_I);
+
     private JMenu menuFile = new JMenu("File");
     private JMenuItem menuLoadFromDocument = new JMenuItem("Load from document", KeyEvent.VK_L);
     private JMenuItem menuSaveToDocument = new JMenuItem("Save to document", KeyEvent.VK_S);
-
-    private JMenu menuGraph = new JMenu("GraphForNodes");
-    private JMenu menuHelp = new JMenu("Help");
-    private JMenuItem menuNew = new JMenuItem("New", KeyEvent.VK_N);
-    private JMenuItem menuShowExample = new JMenuItem("Example", KeyEvent.VK_X);
-    private JMenuItem menuExit = new JMenuItem("Exit", KeyEvent.VK_E);
-    private JMenuItem menuListOfNodes = new JMenuItem("List of Nodes", KeyEvent.VK_N);
-    private JMenuItem menuAuthor = new JMenuItem("Author", KeyEvent.VK_A);
-    private JMenuItem menuInstruction = new JMenuItem("Instruction", KeyEvent.VK_I);
 
     private GraphPanel panel = new GraphPanel();
 
@@ -84,20 +73,20 @@ public class GraphEditor extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setContentPane(panel);
         createMenu();
-        showBuildinExample();
+        showBuildingExample();
         setVisible(true);
     }
 
-    private void showListOfNodes(GraphForNodes graphForNodes) {
-        Node array[] = graphForNodes.getNodes();
+    private void showListOfNodes(Graph graph) {
+        Node array[] = graph.getNodes();
         int i = 0;
-        StringBuilder message = new StringBuilder("Liczba wêz³ów: " + array.length + "\n");
+        StringBuilder message = new StringBuilder("Amount of nodes: " + array.length + "\n");
         for (Node node : array) {
             message.append(node + "    ");
             if (++i % 5 == 0)
                 message.append("\n");
         }
-        JOptionPane.showMessageDialog(this, message, APP_TITLE + " - Lista wêz³ów", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, APP_TITLE + " - Amount of nodes", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void createMenu() {
@@ -137,10 +126,10 @@ public class GraphEditor extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
         if (source == menuNew) {
-            panel.setGraph(new GraphForNodes());
+            panel.setGraph(new Graph());
         }
         if (source == menuShowExample) {
-            showBuildinExample();
+            showBuildingExample();
         }
         if (source == menuListOfNodes) {
             showListOfNodes(panel.getGraph());
@@ -157,7 +146,7 @@ public class GraphEditor extends JFrame implements ActionListener {
 
         if (source == menuLoadFromDocument) {
             try {
-                panel.getGraph().setNodes(loadGroupListFromFile(LIST_OF_NODES));
+                panel.setGraph(loadGroupListFromFile(LIST_OF_GRAPH));
             } catch (NodeException e) {
                 e.printStackTrace();
             }
@@ -166,35 +155,39 @@ public class GraphEditor extends JFrame implements ActionListener {
 
         if (source == menuSaveToDocument) {
             try {
-                saveGroupListToFile(LIST_OF_NODES);
+                saveGroupListToFile(LIST_OF_GRAPH);
             } catch (NodeException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void showBuildinExample() {
-        GraphForNodes graphForNodes = new GraphForNodes();
+    private void showBuildingExample() {
+        Graph graph = new Graph();
 
-        Node n1 = new Node(100, 100);
-        Node n2 = new Node(100, 200);
-        n2.setColor(Color.CYAN);
-        Node n3 = new Node(200, 100);
-        n3.setR(20);
-        Node n4 = new Node(200, 250);
-        n4.setColor(Color.GREEN);
-        n4.setR(30);
+        Node node1 = new Node(130, 40);
+        node1.setColor(Color.RED);
+        node1.setR(30);
+        Node node2 = new Node(300, 100);
+        node2.setColor(Color.MAGENTA);
+        node2.setR(35);
+        Node node3 = new Node(50, 200);
+        node3.setColor(Color.YELLOW);
+        node3.setR(20);
+        Node node4 = new Node(200, 250);
+        node4.setColor(Color.GREEN);
+        node4.setR(30);
 
-        graphForNodes.addNode(n1);
-        graphForNodes.addNode(n2);
-        graphForNodes.addNode(n3);
-        graphForNodes.addNode(n4);
-        panel.setGraph(graphForNodes);
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
+        panel.setGraph(graph);
     }
 
     void saveGroupListToFile(String fileName) throws NodeException {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            out.writeObject(panel.getGraph().getNodesList());
+            out.writeObject(panel.getGraph());
         } catch (FileNotFoundException e) {
             throw new NodeException("File wasn't found: " + fileName);
         } catch (IOException e) {
@@ -203,10 +196,10 @@ public class GraphEditor extends JFrame implements ActionListener {
 
     }
 
-    public static List<Node> loadGroupListFromFile(String fileName) throws NodeException {
-        List<Node> listOfNodes = new ArrayList<>();
+    public static Graph loadGroupListFromFile(String fileName) throws NodeException {
+        Graph loadedGraph = new Graph();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-            listOfNodes = (List<Node>) in.readObject();
+            loadedGraph = (Graph) in.readObject();
         } catch (FileNotFoundException e) {
             throw new NodeException("File wasn't found: " + fileName);
         } catch (IOException e) {
@@ -214,9 +207,9 @@ public class GraphEditor extends JFrame implements ActionListener {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return listOfNodes;
+        return loadedGraph;
     }
-    }
+}
 
 
 

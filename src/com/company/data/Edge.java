@@ -1,6 +1,10 @@
-package com.company.dataElements;
+/**
+ * Nazwa: Graph editor
+ * Autor: Valeriia Tykhoniuk (266319)
+ * Data utworzenia: 13.12.2022
+ */
 
-import com.company.data.Node;
+package com.company.data;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -49,19 +53,19 @@ public class Edge implements Serializable {
         double fY = my - firstNode.getY();
 
         double sD = Math.pow(dX, 2) + Math.pow(dY, 2);
-        double d = Math.sqrt(sD); // length of d (from point A to point B)
+        double d = Math.sqrt(sD);
 
         double sE = Math.pow(eX, 2) + Math.pow(eY, 2);
-        double e = Math.sqrt(sE); // length of e (from point B to point C)
+        double e = Math.sqrt(sE);
 
         double sF = Math.pow(fX, 2) + Math.pow(fY, 2);
-        double f = Math.sqrt(sF); // length of f (from point C to point A)
+        double f = Math.sqrt(sF);
 
-        double p = (d + e + f)/2;
-        double area = Math.sqrt( p * (p-d) * (p-e) * (p-f) );
-        double heightD = (2 * area) / d; //height of edge d
+        double p = (d + e + f) / 2;
+        double area = Math.sqrt(p * (p - d) * (p - e) * (p - f));
+        double heightD = (2 * area) / d;
 
-        return heightD<5;
+        return heightD < 5;
     }
 
     public void draw(Graphics g) {
